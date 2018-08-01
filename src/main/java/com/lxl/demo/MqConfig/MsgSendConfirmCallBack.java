@@ -1,4 +1,4 @@
-package com.lxl.demo.controller;
+package com.lxl.demo.MqConfig;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;

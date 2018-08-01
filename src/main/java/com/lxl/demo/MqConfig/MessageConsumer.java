@@ -1,4 +1,4 @@
-package com.lxl.demo.controller;
+package com.lxl.demo.MqConfig;
 
 /**
  * @auther lixinlong
@@ -13,12 +13,12 @@ import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 
 public class MessageConsumer implements ChannelAwareMessageListener {
 
-    private Logger logger = LoggerFactory.getLogger(MessageConsumer.class);
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void onMessage(Message message, com.rabbitmq.client.Channel channel) throws Exception {
         byte[] body = message.getBody();
-        System.out.println("收到消息1 : " + new String(body));
+        logger.info("收到消息1 : " + new String(body));
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false); //确认消息成功消费
 
     }

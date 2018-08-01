@@ -1,8 +1,7 @@
 package com.lxl.demo.config;
 
-import com.lxl.demo.controller.MessageConsumer;
-import com.lxl.demo.controller.MessageConsumer2;
-import com.lxl.demo.controller.MsgSendConfirmCallBack;
+import com.lxl.demo.MqConfig.MessageConsumer;
+import com.lxl.demo.MqConfig.MessageConsumer2;import com.lxl.demo.MqConfig.MsgSendConfirmCallBack;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,6 +19,10 @@ import org.springframework.context.annotation.Configuration;
  *</dl>
  */
 
+/***
+ * 交换机：rabbitMq有四种类型的交换机fanout、direct、topic、headers
+ */
+@SuppressWarnings("all")
 @Configuration
 public class ConnectionFactoryConfigure {
 
@@ -43,7 +46,7 @@ public class ConnectionFactoryConfigure {
 
     /**
      创建连接工厂
-     * @date:2017/8/31
+     * @date:2018/6/10
      * @className:ConnectionFactory
      * @author:Administrator
      * @description:
@@ -66,7 +69,7 @@ public class ConnectionFactoryConfigure {
      topic交换器你采用模糊匹配路由键的原则进行转发消息到队列中  
      key: queue在该direct-exchange中的key值，当消息发送给direct-exchange中指定key为设置值时，消息将会转发给queue参数指定  
      的消息队列  
-     * @date:2017/9/1
+     * @date:2018/6/10
      * @className:ConnectionFactory
      * @author:Administrator
      * @description:
@@ -92,7 +95,7 @@ public class ConnectionFactoryConfigure {
 
     /**
      将消息队列1和交换机进行绑定  
-     * @date:2017/9/1
+     * @date:2018/6/10
      * @className:ConnectionFactoryConfigure
      * @author:Administrator
      * @description:
@@ -102,7 +105,6 @@ public class ConnectionFactoryConfigure {
         return BindingBuilder.bind(queue_one()).to(directExchange()).with(ConnectionFactoryConfigure.ROUTINGKEY1);
     }
 
-    //--------------------定义queue_one------------------------------------------------  
 
     //--------------------定义queue_two------------------------------------------------  
     @Bean
@@ -117,7 +119,7 @@ public class ConnectionFactoryConfigure {
 
     /**
      将消息队列2和交换机进行绑定  
-     * @date:2017/9/1
+     * @date:2018/6/10
      * @className:ConnectionFactoryConfigure
      * @author:Administrator
      * @description:
@@ -132,7 +134,7 @@ public class ConnectionFactoryConfigure {
 
     /**
      queue litener  观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象  
-     * @date:2017/9/1
+     * @date:2018/6/10
      * @className:ConnectionFactory
      * @author:Administrator
      * @description:
@@ -151,7 +153,7 @@ public class ConnectionFactoryConfigure {
 
     /**
      定义消费者  
-     * @date:2017/9/1
+     * @date:2018/6/10
      * @className:ConnectionFactory
      * @author:Administrator
      * @description:
@@ -163,7 +165,7 @@ public class ConnectionFactoryConfigure {
 
     /**
      queue litener  观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象  
-     * @date:2017/9/1
+     * @date:2018/6/10
      * @className:ConnectionFactory
      * @author:Administrator
      * @description:
@@ -175,14 +177,14 @@ public class ConnectionFactoryConfigure {
         simpleMessageListenerContainer.setExposeListenerChannel(true);
         simpleMessageListenerContainer.setMaxConcurrentConsumers(1);
         simpleMessageListenerContainer.setConcurrentConsumers(1);
-        simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认  
+        simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认
         simpleMessageListenerContainer.setMessageListener(messageConsumer2());
         return simpleMessageListenerContainer;
     }
 
     /**
      定义消费者
-     * @date:2017/9/1
+     * @date:2018/6/10
      * @className:ConnectionFactory
      * @author:Administrator
      * @description:
@@ -194,7 +196,7 @@ public class ConnectionFactoryConfigure {
 
     /**
      定义rabbit template用于数据的接收和发送
-     * @date:2017/8/31
+     * @date:2018/6/10
      * @className:ConnectionFactory
      * @author:Administrator
      * @description:*/
@@ -205,7 +207,7 @@ public class ConnectionFactoryConfigure {
          * 每个rabbitTemplate只能有一个confirm-callback和return-callback*/
 
         template.setConfirmCallback(msgSendConfirmCallBack());
-        //template.setReturnCallback(msgSendReturnCallback());  
+        //template.setReturnCallback(msgSendReturnCallback());
         /**
          * 使用return-callback时必须设置mandatory为true，或者在配置中设置mandatory-expression的值为true，可针对每次请求的消息去确定’mandatory’的boolean值，  
          * 只能在提供’return -callback’时使用，与mandatory互斥*/
@@ -218,7 +220,7 @@ public class ConnectionFactoryConfigure {
      Confirms给客户端一种轻量级的方式，能够跟踪哪些消息被broker处理，哪些可能因为broker宕掉或者网络失败的情况而重新发布。
      确认并且保证消息被送达，提供了两种方式：发布确认和事务。(两者不可同时使用)在channel为事务时，
      不可引入确认模式；同样channel为确认模式下，不可使用事务。
-     * @date:2017/8/31
+     * @date:2018/6/10
      * @className:ConnectionFactory
      * @author:Administrator
      * @description:
